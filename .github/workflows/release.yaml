@@ -2,26 +2,26 @@ name: goreleaser
 
 on:
   push:
-    branches:
-      - 'main'
+    tags:
+    - v*
 
 jobs:
   docker-release:
     name: Release docker image to registries
     runs-on: ubuntu-latest
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}       
-      - name: Push to Docker Hub registry
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: cagip/kubi-members:latest
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Push to Docker Hub registry
+      id: docker_build
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        tags: cagip/kubi/kubi-members:${{ github.ref_name }}

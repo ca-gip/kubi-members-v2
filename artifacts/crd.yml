@@ -1,112 +1,118 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: projectmembers.ca-gip.github.com
+  name: projectmembers.cagip.github.com
 spec:
-  group: ca-gip.github.com
+  group: cagip.github.com
   version: v1
   versions:
-    - name: v1
-      served: true
-      storage: true
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          uid:
+            type: string
+          dn:
+            type: string
+          username:
+            type: string
+          mail:
+            type: string
+
+    additionalPrinterColumns:
+    - name: UID
+      type: string
+      description: Unique Identifier of the member (unhashed)
+      jsonPath: .uid
+    - name: Mail
+      type: string
+      description: Mail of the member
+      jsonPath: .mail
+    - name: DN
+      type: string
+      description: DN of the member
+      jsonPath: .dn
   names:
     singular: projectmember
     plural: projectmembers
     listKind: ProjectMembersList
     kind: ProjectMember
     shortNames:
-      - pm
+    - pm
   scope: Namespaced
-  validation:
-    openAPIV3Schema:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-        metadata:
-          type: object
-        uid:
-          type: string
-        dn:
-          type: string
-        username:
-          type: string
-        mail:
-          type: string
-  additionalPrinterColumns:
-    - name: UID
-      type: string
-      description: Unique Identifier of the member (unhashed)
-      JSONPath: .uid
-    - name: Mail
-      type: string
-      description: Mail of the member
-      JSONPath: .mail
-    - name: DN
-      type: string
-      description: DN of the member
-      JSONPath: .dn
+
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: clustermembers.ca-gip.github.com
+  name: clustermembers.cagip.github.com
 spec:
-  group: ca-gip.github.com
+  group: cagip.github.com
   version: v1
   versions:
-    - name: v1
-      served: true
-      storage: true
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          uid:
+            type: string
+          dn:
+            type: string
+          username:
+            type: string
+          mail:
+            type: string
+          role:
+            enum:
+            - "ClusterOps"
+            - "Admin"
+            - "CustomerOps"
+            - "AppOps"
+            type: string
+
+    additionalPrinterColumns:
+    - name: UID
+      type: string
+      description: Unique Identifier of the member (unhashed)
+      jsonPath: .uid
+    - name: Mail
+      type: string
+      description: Mail of the member
+      jsonPath: .mail
+    - name: DN
+      type: string
+      description: DN of the member
+      jsonPath: .dn
+    - name: Role
+      type: string
+      description: Role of the member
+      jsonPath: .role
   names:
     singular: clustermember
     plural: clustermembers
     listKind: ClusterMembersList
     kind: ClusterMember
     shortNames:
-      - clumem
+    - clumem
   scope: Cluster
-  validation:
-    openAPIV3Schema:
-      type: object
-      properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-        metadata:
-          type: object
-        uid:
-          type: string
-        dn:
-          type: string
-        username:
-          type: string
-        mail:
-          type: string
-        role:
-          enum:
-          - "ClusterOps"
-          - "Admin"
-          - "CustomerOps"
-          - "AppOps"
-          type: string
-  additionalPrinterColumns:
-    - name: UID
-      type: string
-      description: Unique Identifier of the member (unhashed)
-      JSONPath: .uid
-    - name: Mail
-      type: string
-      description: Mail of the member
-      JSONPath: .mail
-    - name: DN
-      type: string
-      description: DN of the member
-      JSONPath: .dn
-    - name: Role
-      type: string
-      description: Role of the member
-      JSONPath: .role
+
+

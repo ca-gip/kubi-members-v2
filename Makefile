@@ -1,4 +1,4 @@
-.PHONY: clean
+.PHONY: dependency codegen test build
 
 REPO= github.com/ca-gip/kubi-members
 IMAGE= kubi-members
@@ -15,5 +15,5 @@ test:
 	GOARCH=amd64 go tool cover -func coverage.out
 	GOARCH=amd64 go tool cover -html=coverage.out -o coverage.html
 
-build:
-	GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -v -o ./build/$(IMAGE) -i $(GOPATH)/src/$(REPO)/main.go
+build: codegen
+	GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -v -o ./build/$(IMAGE)  $(GOPATH)/src/$(REPO)/main.go

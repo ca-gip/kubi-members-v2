@@ -21,3 +21,6 @@ vendor/
 *.ntvs*
 *.njsproj
 *.sln
+
+coverage.html
+coverage.out

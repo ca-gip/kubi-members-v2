@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	"os"
+	"path/filepath"
+
 	"github.com/ca-gip/kubi-members/internal/controller"
 	"github.com/ca-gip/kubi-members/internal/ldap"
 	membersclientset "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned"
@@ -10,8 +13,6 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog/v2"
-	"os"
-	"path/filepath"
 )
 
 var (

@@ -3,12 +3,13 @@
 package v1
 
 import (
+	"context"
 	time "time"
 
-	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	versioned "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned"
 	internalinterfaces "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/internalinterfaces"
-	v1 "github.com/ca-gip/kubi-members/pkg/generated/listers/ca-gip/v1"
+	v1 "github.com/ca-gip/kubi-members/pkg/generated/listers/cagip/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -45,13 +46,13 @@ func NewFilteredProjectMemberInformer(client versioned.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CagipV1().ProjectMembers(namespace).List(options)
+				return client.CagipV1().ProjectMembers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CagipV1().ProjectMembers(namespace).Watch(options)
+				return client.CagipV1().ProjectMembers(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&cagipv1.ProjectMember{},

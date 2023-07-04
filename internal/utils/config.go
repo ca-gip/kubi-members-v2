@@ -1,9 +1,12 @@
 package utils
 
 import (
-	"github.com/joho/godotenv"
 	"os"
+	"path/filepath"
 	"strconv"
+
+	"github.com/joho/godotenv"
+	"k8s.io/klog/v2"
 )
 
 type LdapConfig struct {
@@ -30,7 +33,12 @@ func LoadConfig() LdapConfig {
 
 	env := os.Getenv("GO_DOT_ENV")
 	if env != "" {
-		godotenv.Load("./dev/.env")
+		filePath := filepath.Join("dev", ".env")
+
+		err := godotenv.Load(filePath)
+		if err != nil {
+			klog.Warningf("failed to load environment file: %v", err)
+		}
 	}
 
 	ldapPort, errLdapPort := strconv.Atoi(getEnv("LDAP_PORT", "389"))

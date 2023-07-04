@@ -3,7 +3,9 @@
 package fake
 
 import (
-	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	"context"
+
+	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -22,7 +24,7 @@ var clustermembersResource = schema.GroupVersionResource{Group: "cagip.github.co
 var clustermembersKind = schema.GroupVersionKind{Group: "cagip.github.com", Version: "v1", Kind: "ClusterMember"}
 
 // Get takes name of the clusterMember, and returns the corresponding clusterMember object, and an error if there is any.
-func (c *FakeClusterMembers) Get(name string, options v1.GetOptions) (result *cagipv1.ClusterMember, err error) {
+func (c *FakeClusterMembers) Get(ctx context.Context, name string, options v1.GetOptions) (result *cagipv1.ClusterMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootGetAction(clustermembersResource, name), &cagipv1.ClusterMember{})
 	if obj == nil {
@@ -32,7 +34,7 @@ func (c *FakeClusterMembers) Get(name string, options v1.GetOptions) (result *ca
 }
 
 // List takes label and field selectors, and returns the list of ClusterMembers that match those selectors.
-func (c *FakeClusterMembers) List(opts v1.ListOptions) (result *cagipv1.ClusterMemberList, err error) {
+func (c *FakeClusterMembers) List(ctx context.Context, opts v1.ListOptions) (result *cagipv1.ClusterMemberList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootListAction(clustermembersResource, clustermembersKind, opts), &cagipv1.ClusterMemberList{})
 	if obj == nil {
@@ -53,13 +55,13 @@ func (c *FakeClusterMembers) List(opts v1.ListOptions) (result *cagipv1.ClusterM
 }
 
 // Watch returns a watch.Interface that watches the requested clusterMembers.
-func (c *FakeClusterMembers) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeClusterMembers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(clustermembersResource, opts))
 }
 
 // Create takes the representation of a clusterMember and creates it.  Returns the server's representation of the clusterMember, and an error, if there is any.
-func (c *FakeClusterMembers) Create(clusterMember *cagipv1.ClusterMember) (result *cagipv1.ClusterMember, err error) {
+func (c *FakeClusterMembers) Create(ctx context.Context, clusterMember *cagipv1.ClusterMember, opts v1.CreateOptions) (result *cagipv1.ClusterMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootCreateAction(clustermembersResource, clusterMember), &cagipv1.ClusterMember{})
 	if obj == nil {
@@ -69,7 +71,7 @@ func (c *FakeClusterMembers) Create(clusterMember *cagipv1.ClusterMember) (resul
 }
 
 // Update takes the representation of a clusterMember and updates it. Returns the server's representation of the clusterMember, and an error, if there is any.
-func (c *FakeClusterMembers) Update(clusterMember *cagipv1.ClusterMember) (result *cagipv1.ClusterMember, err error) {
+func (c *FakeClusterMembers) Update(ctx context.Context, clusterMember *cagipv1.ClusterMember, opts v1.UpdateOptions) (result *cagipv1.ClusterMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateAction(clustermembersResource, clusterMember), &cagipv1.ClusterMember{})
 	if obj == nil {
@@ -79,22 +81,22 @@ func (c *FakeClusterMembers) Update(clusterMember *cagipv1.ClusterMember) (resul
 }
 
 // Delete takes name of the clusterMember and deletes it. Returns an error if one occurs.
-func (c *FakeClusterMembers) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeClusterMembers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(clustermembersResource, name), &cagipv1.ClusterMember{})
+		Invokes(testing.NewRootDeleteActionWithOptions(clustermembersResource, name, opts), &cagipv1.ClusterMember{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeClusterMembers) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(clustermembersResource, listOptions)
+func (c *FakeClusterMembers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(clustermembersResource, listOpts)
 
 	_, err := c.Fake.Invokes(action, &cagipv1.ClusterMemberList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched clusterMember.
-func (c *FakeClusterMembers) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *cagipv1.ClusterMember, err error) {
+func (c *FakeClusterMembers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *cagipv1.ClusterMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(clustermembersResource, name, pt, data, subresources...), &cagipv1.ClusterMember{})
 	if obj == nil {
