@@ -3,15 +3,17 @@
 package v1
 
 import (
-	v1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	v1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 )
 
 // ProjectMemberLister helps list ProjectMembers.
+// All objects returned here must be treated as read-only.
 type ProjectMemberLister interface {
 	// List lists all ProjectMembers in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ProjectMember, err error)
 	// ProjectMembers returns an object that can list and get ProjectMembers.
 	ProjectMembers(namespace string) ProjectMemberNamespaceLister
@@ -42,10 +44,13 @@ func (s *projectMemberLister) ProjectMembers(namespace string) ProjectMemberName
 }
 
 // ProjectMemberNamespaceLister helps list and get ProjectMembers.
+// All objects returned here must be treated as read-only.
 type ProjectMemberNamespaceLister interface {
 	// List lists all ProjectMembers in the indexer for a given namespace.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ProjectMember, err error)
 	// Get retrieves the ProjectMember from the indexer for a given namespace and name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ProjectMember, error)
 	ProjectMemberNamespaceListerExpansion
 }

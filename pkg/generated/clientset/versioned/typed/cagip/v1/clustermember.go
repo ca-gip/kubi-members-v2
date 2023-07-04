@@ -3,9 +3,10 @@
 package v1
 
 import (
+	"context"
 	"time"
 
-	v1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	v1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	scheme "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -21,14 +22,14 @@ type ClusterMembersGetter interface {
 
 // ClusterMemberInterface has methods to work with ClusterMember resources.
 type ClusterMemberInterface interface {
-	Create(*v1.ClusterMember) (*v1.ClusterMember, error)
-	Update(*v1.ClusterMember) (*v1.ClusterMember, error)
-	Delete(name string, options *metav1.DeleteOptions) error
-	DeleteCollection(options *metav1.DeleteOptions, listOptions metav1.ListOptions) error
-	Get(name string, options metav1.GetOptions) (*v1.ClusterMember, error)
-	List(opts metav1.ListOptions) (*v1.ClusterMemberList, error)
-	Watch(opts metav1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1.ClusterMember, err error)
+	Create(ctx context.Context, clusterMember *v1.ClusterMember, opts metav1.CreateOptions) (*v1.ClusterMember, error)
+	Update(ctx context.Context, clusterMember *v1.ClusterMember, opts metav1.UpdateOptions) (*v1.ClusterMember, error)
+	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
+	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.ClusterMember, error)
+	List(ctx context.Context, opts metav1.ListOptions) (*v1.ClusterMemberList, error)
+	Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ClusterMember, err error)
 	ClusterMemberExpansion
 }
 
@@ -45,19 +46,19 @@ func newClusterMembers(c *CagipV1Client) *clusterMembers {
 }
 
 // Get takes name of the clusterMember, and returns the corresponding clusterMember object, and an error if there is any.
-func (c *clusterMembers) Get(name string, options metav1.GetOptions) (result *v1.ClusterMember, err error) {
+func (c *clusterMembers) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ClusterMember, err error) {
 	result = &v1.ClusterMember{}
 	err = c.client.Get().
 		Resource("clustermembers").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of ClusterMembers that match those selectors.
-func (c *clusterMembers) List(opts metav1.ListOptions) (result *v1.ClusterMemberList, err error) {
+func (c *clusterMembers) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ClusterMemberList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -67,13 +68,13 @@ func (c *clusterMembers) List(opts metav1.ListOptions) (result *v1.ClusterMember
 		Resource("clustermembers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested clusterMembers.
-func (c *clusterMembers) Watch(opts metav1.ListOptions) (watch.Interface, error) {
+func (c *clusterMembers) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -83,66 +84,69 @@ func (c *clusterMembers) Watch(opts metav1.ListOptions) (watch.Interface, error)
 		Resource("clustermembers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(ctx)
 }
 
 // Create takes the representation of a clusterMember and creates it.  Returns the server's representation of the clusterMember, and an error, if there is any.
-func (c *clusterMembers) Create(clusterMember *v1.ClusterMember) (result *v1.ClusterMember, err error) {
+func (c *clusterMembers) Create(ctx context.Context, clusterMember *v1.ClusterMember, opts metav1.CreateOptions) (result *v1.ClusterMember, err error) {
 	result = &v1.ClusterMember{}
 	err = c.client.Post().
 		Resource("clustermembers").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(clusterMember).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Update takes the representation of a clusterMember and updates it. Returns the server's representation of the clusterMember, and an error, if there is any.
-func (c *clusterMembers) Update(clusterMember *v1.ClusterMember) (result *v1.ClusterMember, err error) {
+func (c *clusterMembers) Update(ctx context.Context, clusterMember *v1.ClusterMember, opts metav1.UpdateOptions) (result *v1.ClusterMember, err error) {
 	result = &v1.ClusterMember{}
 	err = c.client.Put().
 		Resource("clustermembers").
 		Name(clusterMember.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(clusterMember).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Delete takes name of the clusterMember and deletes it. Returns an error if one occurs.
-func (c *clusterMembers) Delete(name string, options *metav1.DeleteOptions) error {
+func (c *clusterMembers) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("clustermembers").
 		Name(name).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *clusterMembers) DeleteCollection(options *metav1.DeleteOptions, listOptions metav1.ListOptions) error {
+func (c *clusterMembers) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	var timeout time.Duration
-	if listOptions.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("clustermembers").
-		VersionedParams(&listOptions, scheme.ParameterCodec).
+		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // Patch applies the patch and returns the patched clusterMember.
-func (c *clusterMembers) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1.ClusterMember, err error) {
+func (c *clusterMembers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ClusterMember, err error) {
 	result = &v1.ClusterMember{}
 	err = c.client.Patch(pt).
 		Resource("clustermembers").
-		SubResource(subresources...).
 		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(data).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }

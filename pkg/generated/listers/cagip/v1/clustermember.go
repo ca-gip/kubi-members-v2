@@ -3,17 +3,20 @@
 package v1
 
 import (
-	v1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	v1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 )
 
 // ClusterMemberLister helps list ClusterMembers.
+// All objects returned here must be treated as read-only.
 type ClusterMemberLister interface {
 	// List lists all ClusterMembers in the indexer.
+	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1.ClusterMember, err error)
 	// Get retrieves the ClusterMember from the index for a given name.
+	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1.ClusterMember, error)
 	ClusterMemberListerExpansion
 }

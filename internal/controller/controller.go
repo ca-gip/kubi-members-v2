@@ -1,13 +1,15 @@
 package controller
 
 import (
+	"context"
 	"crypto/md5"
 	"fmt"
+
 	"github.com/ca-gip/kubi-members/internal/ldap"
 	"github.com/ca-gip/kubi-members/internal/utils"
-	v1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	v1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	membersclientset "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned"
-	kubiv1 "github.com/ca-gip/kubi/pkg/apis/ca-gip/v1"
+	kubiv1 "github.com/ca-gip/kubi/pkg/apis/cagip/v1"
 	projectclientset "github.com/ca-gip/kubi/pkg/generated/clientset/versioned"
 	errors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,7 +21,7 @@ type Controller struct {
 	configmapclientset kubernetes.Interface
 	projectclientset   projectclientset.Interface
 	membersclientset   membersclientset.Interface
-	projectsMembers		map[string][]*v1.ProjectMember
+	projectsMembers    map[string][]*v1.ProjectMember
 	clusterMembers     []*v1.ClusterMember
 
 	ldap *ldap.Ldap
@@ -63,10 +65,13 @@ func (c *Controller) Run() (err error) {
 }
 
 func (c *Controller) SyncClusterMembers() {
-	c.membersclientset.CagipV1().ClusterMembers().DeleteCollection(&metav1.DeleteOptions{},metav1.ListOptions{})
+	err := c.membersclientset.CagipV1().ClusterMembers().DeleteCollection(context.TODO(), metav1.DeleteOptions{}, metav1.ListOptions{})
+	if err != nil {
+		klog.Error("Could not delete cluster members ", err)
 
+	}
 	for _, member := range c.clusterMembers {
-		_, err := c.membersclientset.CagipV1().ClusterMembers().Create(member)
+		_, err := c.membersclientset.CagipV1().ClusterMembers().Create(context.TODO(), member, metav1.CreateOptions{})
 		if err != nil {
 			klog.Errorf("Could not create cluster member %s", member.Username, err)
 		}
@@ -76,14 +81,13 @@ func (c *Controller) SyncClusterMembers() {
 func (c *Controller) SyncProjectMembers() {
 	c.clearProjectsMembers()
 	for project, members := range c.projectsMembers {
-		c.createProjectMembers(project,members)
+		c.createProjectMembers(project, members)
 	}
 
 }
 
-
 func (c *Controller) LocalSyncProjectsMembers() error {
-	projects, err := c.projectclientset.CagipV1().Projects().List(metav1.ListOptions{})
+	projects, err := c.projectclientset.CagipV1().Projects().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		klog.Errorf("Could not list project : %s", err)
 		return err
@@ -99,7 +103,6 @@ func (c *Controller) LocalSyncProjectsMembers() error {
 	}
 	return nil
 }
-
 
 func (c *Controller) LocalSyncClusterMembers() error {
 	if c.ldap.OpsGroupBase != "" {
@@ -145,8 +148,6 @@ func (c *Controller) LocalSyncClusterMembers() error {
 	return nil
 }
 
-
-
 func (c *Controller) indexOfClusterMember(user ldap.User) int {
 	for i := 0; i < len(c.clusterMembers); i++ {
 		if c.clusterMembers[i].Mail == user.Mail {
@@ -177,7 +178,7 @@ func (c *Controller) templateClusterMember(member ldap.User, role utils.ClusterR
 		ObjectMeta: metav1.ObjectMeta{
 			Name: fmt.Sprintf("%x", md5.Sum([]byte(member.ID))),
 		},
-		UID: 	  member.ID,
+		UID:      member.ID,
 		Dn:       member.Dn,
 		Username: member.Username,
 		Mail:     member.Mail,
@@ -187,27 +188,27 @@ func (c *Controller) templateClusterMember(member ldap.User, role utils.ClusterR
 
 func (c *Controller) createProjectMembers(namespace string, members []*v1.ProjectMember) {
 	for _, member := range members {
-		_, err := c.membersclientset.CagipV1().ProjectMembers(namespace).Get(member.Username, metav1.GetOptions{})
+		_, err := c.membersclientset.CagipV1().ProjectMembers(namespace).Get(context.TODO(), member.Username, metav1.GetOptions{})
 		if errors.IsNotFound(err) {
-			_, err := c.membersclientset.CagipV1().ProjectMembers(namespace).Create(member)
+			_, err := c.membersclientset.CagipV1().ProjectMembers(namespace).Create(context.TODO(), member, metav1.CreateOptions{})
 			if err != nil {
 				klog.Errorf("Could not create ProjectMember %s : %s", member.Username, err)
 			}
 		}
 	}
-	return
+
 }
 
 func (c *Controller) templateProjectMember(project *kubiv1.Project, user ldap.User) *v1.ProjectMember {
 	return &v1.ProjectMember{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: fmt.Sprintf("%x", md5.Sum([]byte(user.ID))),
+			Name:      fmt.Sprintf("%x", md5.Sum([]byte(user.ID))),
 			Namespace: project.Name,
 			OwnerReferences: []metav1.OwnerReference{
 				*metav1.NewControllerRef(project, kubiv1.SchemeGroupVersion.WithKind("Project")),
 			},
 		},
-		UID: 	  user.ID,
+		UID:      user.ID,
 		Dn:       user.Dn,
 		Username: user.Username,
 		Mail:     user.Mail,
@@ -223,12 +224,12 @@ func (c *Controller) templateProjectMembers(project *kubiv1.Project, users []lda
 }
 
 func (c *Controller) clearProjectsMembers() {
-	projects, err := c.projectclientset.CagipV1().Projects().List(metav1.ListOptions{})
+	projects, err := c.projectclientset.CagipV1().Projects().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		klog.Errorf("Could not list projects")
 	}
 	for _, project := range projects.Items {
-		err = c.membersclientset.CagipV1().ProjectMembers(project.Name).DeleteCollection(&metav1.DeleteOptions{}, metav1.ListOptions{})
+		err = c.membersclientset.CagipV1().ProjectMembers(project.Name).DeleteCollection(context.TODO(), metav1.DeleteOptions{}, metav1.ListOptions{})
 		if err != nil {
 			klog.Errorf("Could not remove members from project %s: %v", project.Name, err)
 		}

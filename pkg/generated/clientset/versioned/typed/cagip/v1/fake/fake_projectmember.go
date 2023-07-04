@@ -3,7 +3,9 @@
 package fake
 
 import (
-	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/ca-gip/v1"
+	"context"
+
+	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -23,7 +25,7 @@ var projectmembersResource = schema.GroupVersionResource{Group: "cagip.github.co
 var projectmembersKind = schema.GroupVersionKind{Group: "cagip.github.com", Version: "v1", Kind: "ProjectMember"}
 
 // Get takes name of the projectMember, and returns the corresponding projectMember object, and an error if there is any.
-func (c *FakeProjectMembers) Get(name string, options v1.GetOptions) (result *cagipv1.ProjectMember, err error) {
+func (c *FakeProjectMembers) Get(ctx context.Context, name string, options v1.GetOptions) (result *cagipv1.ProjectMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(projectmembersResource, c.ns, name), &cagipv1.ProjectMember{})
 
@@ -34,7 +36,7 @@ func (c *FakeProjectMembers) Get(name string, options v1.GetOptions) (result *ca
 }
 
 // List takes label and field selectors, and returns the list of ProjectMembers that match those selectors.
-func (c *FakeProjectMembers) List(opts v1.ListOptions) (result *cagipv1.ProjectMemberList, err error) {
+func (c *FakeProjectMembers) List(ctx context.Context, opts v1.ListOptions) (result *cagipv1.ProjectMemberList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(projectmembersResource, projectmembersKind, c.ns, opts), &cagipv1.ProjectMemberList{})
 
@@ -56,14 +58,14 @@ func (c *FakeProjectMembers) List(opts v1.ListOptions) (result *cagipv1.ProjectM
 }
 
 // Watch returns a watch.Interface that watches the requested projectMembers.
-func (c *FakeProjectMembers) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeProjectMembers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(projectmembersResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a projectMember and creates it.  Returns the server's representation of the projectMember, and an error, if there is any.
-func (c *FakeProjectMembers) Create(projectMember *cagipv1.ProjectMember) (result *cagipv1.ProjectMember, err error) {
+func (c *FakeProjectMembers) Create(ctx context.Context, projectMember *cagipv1.ProjectMember, opts v1.CreateOptions) (result *cagipv1.ProjectMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(projectmembersResource, c.ns, projectMember), &cagipv1.ProjectMember{})
 
@@ -74,7 +76,7 @@ func (c *FakeProjectMembers) Create(projectMember *cagipv1.ProjectMember) (resul
 }
 
 // Update takes the representation of a projectMember and updates it. Returns the server's representation of the projectMember, and an error, if there is any.
-func (c *FakeProjectMembers) Update(projectMember *cagipv1.ProjectMember) (result *cagipv1.ProjectMember, err error) {
+func (c *FakeProjectMembers) Update(ctx context.Context, projectMember *cagipv1.ProjectMember, opts v1.UpdateOptions) (result *cagipv1.ProjectMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(projectmembersResource, c.ns, projectMember), &cagipv1.ProjectMember{})
 
@@ -85,23 +87,23 @@ func (c *FakeProjectMembers) Update(projectMember *cagipv1.ProjectMember) (resul
 }
 
 // Delete takes name of the projectMember and deletes it. Returns an error if one occurs.
-func (c *FakeProjectMembers) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeProjectMembers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(projectmembersResource, c.ns, name), &cagipv1.ProjectMember{})
+		Invokes(testing.NewDeleteActionWithOptions(projectmembersResource, c.ns, name, opts), &cagipv1.ProjectMember{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeProjectMembers) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(projectmembersResource, c.ns, listOptions)
+func (c *FakeProjectMembers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(projectmembersResource, c.ns, listOpts)
 
 	_, err := c.Fake.Invokes(action, &cagipv1.ProjectMemberList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched projectMember.
-func (c *FakeProjectMembers) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *cagipv1.ProjectMember, err error) {
+func (c *FakeProjectMembers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *cagipv1.ProjectMember, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(projectmembersResource, c.ns, name, pt, data, subresources...), &cagipv1.ProjectMember{})
 
