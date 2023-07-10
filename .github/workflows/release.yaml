@@ -24,4 +24,4 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: true
-        tags: cagip/kubi/kubi-members:${{ github.ref_name }}
+        tags: cagip/kubi-members-v2:${{ github.ref_name }}
