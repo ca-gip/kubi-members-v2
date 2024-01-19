@@ -1,7 +1,7 @@
 .PHONY: dependency codegen test build
 
-REPO= github.com/ca-gip/kubi-members
-IMAGE= kubi-members
+REPO= github.com/ca-gip/kubi-members-v2
+IMAGE= kubi-members-v2
 DOCKER_REPO= cagip
 
 dependency:

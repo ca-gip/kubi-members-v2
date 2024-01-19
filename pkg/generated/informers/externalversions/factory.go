@@ -7,9 +7,9 @@ import (
 	sync "sync"
 	time "time"
 
-	versioned "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned"
-	cagip "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/cagip"
-	internalinterfaces "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/internalinterfaces"
+	versioned "github.com/ca-gip/kubi-members-v2/pkg/generated/clientset/versioned"
+	cagip "github.com/ca-gip/kubi-members-v2/pkg/generated/informers/externalversions/cagip"
+	internalinterfaces "github.com/ca-gip/kubi-members-v2/pkg/generated/informers/externalversions/internalinterfaces"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

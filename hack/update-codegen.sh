@@ -15,5 +15,5 @@ CODEGEN_PKG=${CODEGEN_PKG:-$(
 #                  k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
 #                  instead of the $GOPATH directly. For normal projects this can be dropped.
 bash "${CODEGEN_PKG}"/generate-groups.sh all \
-  github.com/ca-gip/kubi-members/pkg/generated github.com/ca-gip/kubi-members/pkg/apis \
+  github.com/ca-gip/kubi-members-v2/pkg/generated github.com/ca-gip/kubi-members-v2/pkg/apis \
   cagip:v1 --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt

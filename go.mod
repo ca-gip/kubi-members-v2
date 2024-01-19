@@ -1,4 +1,4 @@
-module github.com/ca-gip/kubi-members
+module github.com/ca-gip/kubi-members-v2
 
 go 1.19
 

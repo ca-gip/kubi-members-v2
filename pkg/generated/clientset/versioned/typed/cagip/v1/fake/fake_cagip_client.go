@@ -3,7 +3,7 @@
 package fake
 
 import (
-	v1 "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned/typed/cagip/v1"
+	v1 "github.com/ca-gip/kubi-members-v2/pkg/generated/clientset/versioned/typed/cagip/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

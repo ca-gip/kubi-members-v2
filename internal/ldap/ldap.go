@@ -3,14 +3,15 @@ package ldap
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/ca-gip/kubi-members/internal/utils"
+	"syscall"
+
+	"github.com/ca-gip/kubi-members-v2/internal/utils"
 	ldap "github.com/go-ldap/ldap/v3"
 	"k8s.io/klog/v2"
-	"syscall"
 )
 
 type User struct {
-	ID 		 string `ldap:"id"`
+	ID       string `ldap:"id"`
 	Dn       string `ldap:"dn"`
 	Username string `ldap:"displayName"`
 	Mail     string `ldap:"mail"`
@@ -47,7 +48,7 @@ func NewLdap() *Ldap {
 		"UserFilter", config.UserFilter,
 		"OpsGroupBase", config.OpsGroupBase,
 		"AppGroupBase", config.AppGroupBase,
-		"AdminGroupBase",config.AdminGroupBase,
+		"AdminGroupBase", config.AdminGroupBase,
 		"CustomerGroupBase", config.CustomerGroupBase,
 		"UserKey", config.UserKey)
 	tlsConfig := &tls.Config{
@@ -130,7 +131,7 @@ func (l *Ldap) searchUser(userDN string) (user *User, err error) {
 		TimeLimit:    10,
 		TypesOnly:    false,
 		Filter:       "(|(objectClass=person)(objectClass=organizationalPerson))",
-		Attributes:   []string{"cn","mail",l.UserKey},
+		Attributes:   []string{"cn", "mail", l.UserKey},
 	})
 
 	if err != nil || res == nil || len(res.Entries) == 0 {
@@ -140,7 +141,7 @@ func (l *Ldap) searchUser(userDN string) (user *User, err error) {
 			Dn:       userDN,
 			Username: res.Entries[0].GetAttributeValue("cn"),
 			Mail:     res.Entries[0].GetAttributeValue("mail"),
-			ID:		  res.Entries[0].GetAttributeValue(l.UserKey),
+			ID:       res.Entries[0].GetAttributeValue(l.UserKey),
 		}
 		return
 	}

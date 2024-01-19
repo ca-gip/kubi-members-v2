@@ -3,7 +3,7 @@
 package v1
 
 import (
-	internalinterfaces "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/internalinterfaces"
+	internalinterfaces "github.com/ca-gip/kubi-members-v2/pkg/generated/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to all the informers in this group version.

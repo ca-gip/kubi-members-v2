@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ca-gip/kubi-members/internal/controller"
-	"github.com/ca-gip/kubi-members/internal/ldap"
-	membersclientset "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned"
+	"github.com/ca-gip/kubi-members-v2/internal/controller"
+	"github.com/ca-gip/kubi-members-v2/internal/ldap"
+	membersclientset "github.com/ca-gip/kubi-members-v2/pkg/generated/clientset/versioned"
 	projectclientset "github.com/ca-gip/kubi/pkg/generated/clientset/versioned"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"

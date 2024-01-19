@@ -3,8 +3,8 @@
 package cagip
 
 import (
-	v1 "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/cagip/v1"
-	internalinterfaces "github.com/ca-gip/kubi-members/pkg/generated/informers/externalversions/internalinterfaces"
+	v1 "github.com/ca-gip/kubi-members-v2/pkg/generated/informers/externalversions/cagip/v1"
+	internalinterfaces "github.com/ca-gip/kubi-members-v2/pkg/generated/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.
