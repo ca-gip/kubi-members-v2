@@ -7,4 +7,4 @@ FROM scratch
 WORKDIR /root/
 COPY --from=build /go/src/github.com/ca-gip/kubi-members-v2/build/kubi-members-v2 .
 EXPOSE 8000
-CMD ["./kubi-members"]
+CMD ["./kubi-members-v2"]
