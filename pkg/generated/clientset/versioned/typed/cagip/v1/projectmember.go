@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
-	scheme "github.com/ca-gip/kubi-members/pkg/generated/clientset/versioned/scheme"
+	v1 "github.com/ca-gip/kubi-members-v2/pkg/apis/cagip/v1"
+	scheme "github.com/ca-gip/kubi-members-v2/pkg/generated/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"

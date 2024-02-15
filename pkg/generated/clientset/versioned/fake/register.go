@@ -3,7 +3,7 @@
 package fake
 
 import (
-	cagipv1 "github.com/ca-gip/kubi-members/pkg/apis/cagip/v1"
+	cagipv1 "github.com/ca-gip/kubi-members-v2/pkg/apis/cagip/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
