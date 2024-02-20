@@ -10,4 +10,4 @@ env.*
 *.csv
 /tmp/*
 /bin/*
-/build/*
+#/build/*

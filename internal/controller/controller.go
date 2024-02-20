@@ -93,7 +93,7 @@ func (c *Controller) LocalSyncProjectsMembers() error {
 		return err
 	}
 	for _, project := range projects.Items {
-		if project.Status.Name == kubiv1.ProjectStatusCreated {
+		if project.Labels["creator"] == "kubi" {
 			members, err := c.ldap.Search(project.Spec.SourceDN)
 			if err != nil {
 				klog.Errorf("Could not find ldap members for %s : %s", project.Spec.SourceDN, err)
